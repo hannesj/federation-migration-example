@@ -1,5 +1,6 @@
 const { ApolloServer, gql } = require('apollo-server');
 const { buildFederatedSchema } = require('@apollo/federation');
+const { TypedID, GraphqlTypedIdScalar } = require('./TypedID');
 
 const typeDefs = gql`
   type Reservation @key(fields: "id") {
@@ -20,10 +21,12 @@ const typeDefs = gql`
   }
 `;
 
-const lookupReservation = () => {
+const lookupReservation = (id) => {
+  console.log(id);
+
   return {
-    id: 1,
-    userId: 1,
+    id: new TypedID("Reservation", "1"),
+    userId: new TypedID("Reservation", "1"),
     reservationDate: 'today',
     status: 'good',
   };
@@ -32,7 +35,7 @@ const lookupReservation = () => {
 const resolvers = {
   Query: {
     reservations: () => [lookupReservation(), lookupReservation()],
-    reservation: () => lookupReservation(),
+    reservation: (parent, {id}) => lookupReservation(id),
   },
   User: {
     reservations: () => [lookupReservation()],
@@ -44,6 +47,7 @@ const resolvers = {
       return res.userId;
     },
   },
+  ID: GraphqlTypedIdScalar
 };
 
 const server = new ApolloServer({
