@@ -3,16 +3,18 @@ const { buildFederatedSchema } = require('@apollo/federation');
 const { TypedID, GraphqlTypedIdScalar } = require('./TypedID');
 
 const typeDefs = gql`
+  scalar TypedID
+
   type Reservation @key(fields: "id") {
-    id: ID!
-    userId: ID!
+    id: TypedID!
+    userId: TypedID!
     reservationDate: String!
     status: String
   }
 
   type Query {
     reservations: [Reservation]!
-    reservation(id: ID!): Reservation
+    reservation(id: TypedID!): Reservation
   }
 
   extend type User @key(fields: "id") {
@@ -47,7 +49,7 @@ const resolvers = {
       return res.userId;
     },
   },
-  ID: GraphqlTypedIdScalar
+  TypedID: GraphqlTypedIdScalar
 };
 
 const server = new ApolloServer({

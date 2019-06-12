@@ -3,16 +3,18 @@ const { TypedID, GraphqlTypedIdScalar } = require('./TypedID');
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
+  scalar TypedID
+
   type Reservation {
-    id: ID!
-    userId: ID!
+    id: TypedID!
+    userId: TypedID!
     reservationDate: String!
     status: String
   }
 
   type Query {
     reservations: [Reservation]!
-    reservation(id: ID!): Reservation
+    reservation(id: TypedID!): Reservation
   }
 `;
 
@@ -32,7 +34,7 @@ const resolvers = {
     reservations: () => [lookupReservation(), lookupReservation()],
     reservation: (parent, {id}) => lookupReservation(id),
   },
-  ID: GraphqlTypedIdScalar
+  TypedID: GraphqlTypedIdScalar
 };
 
 const server = new ApolloServer({
