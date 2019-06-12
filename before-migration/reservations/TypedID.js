@@ -74,6 +74,7 @@ const config = {
     return TypedID.fromString(input);
   },
   parseLiteral(input) {
+    console.log(input)
     if (input.kind !== Kind.STRING) {
       throw new TypeError(
         `unexpected parseLiteral type for TypedId: ${input.kind}`
